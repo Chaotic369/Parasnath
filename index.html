@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parasnath Quest</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Patrick+Hand&display=swap">
+<style>
+:root{--bg:#e9d3a0;--parch:#f6e6bd;--ink:#3b2616;--sea:#7fb7b0;--sea2:#9fd0c6;--land:#e8c77d;--green:#6f9a4a;--accent:#c2402d;--gold:#e0a21f;--card:#fbefcf;--lock:#b8a27a;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1812;--parch:#2b2217;--ink:#f3e2b8;--sea:#1d4a52;--sea2:#2a6168;--land:#6b5230;--green:#5b8a3c;--card:#33291b;--lock:#6f6049;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1d1812;--parch:#2b2217;--ink:#f3e2b8;--sea:#1d4a52;--sea2:#2a6168;--land:#6b5230;--green:#5b8a3c;--card:#33291b;--lock:#6f6049;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Patrick Hand','Comic Sans MS',cursive,sans-serif;font-size:17px;padding-bottom:250px}
+h1,h2,.title{font-family:'Pirata One',Georgia,serif;font-weight:400;letter-spacing:.5px}
+header{max-width:520px;margin:0 auto;padding:14px 16px 6px}
+h1{font-size:34px;margin:0;line-height:1}
+.sub{opacity:.8;margin:2px 0 10px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input[type=date]{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:10px;padding:4px 8px}
+.xp{flex:1;min-width:140px}
+.bar{height:14px;border:2px solid var(--ink);border-radius:9px;background:var(--card);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width 1.4s ease}
+.lvl{font-size:15px;margin-top:2px}
+.mapwrap{max-width:520px;margin:6px auto;padding:0 8px}
+svg{width:100%;height:auto;display:block;border:3px solid var(--ink);border-radius:18px;background:var(--sea)}
+.wave{animation:wv 7s ease-in-out infinite alternate}
+@keyframes wv{to{transform:translateX(18px)}}
+.cloud{animation:cl 40s linear infinite}
+@keyframes cl{from{transform:translateX(-120px)}to{transform:translateX(520px)}}
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes bob{50%{transform:translateY(-6px) rotate(3deg)}}
+.spin{animation:sp 60s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pulse{animation:pu 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pu{50%{transform:scale(1.35);opacity:.55}}
+.node{cursor:pointer}
+.node circle.b{fill:var(--card);stroke:var(--ink);stroke-width:3;transition:fill .8s}
+.node.done circle.b{fill:var(--green)}
+.node.lock circle.b{fill:var(--lock)}
+.node.sel circle.b{stroke:var(--accent);stroke-width:4}
+.node text.e{font-size:20px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.node text.l{font-size:14px;fill:var(--ink);paint-order:stroke;stroke:var(--parch);stroke-width:4px;stroke-linejoin:round;font-family:'Patrick Hand',sans-serif}
+.node text.t{font-size:12px;fill:var(--ink);paint-order:stroke;stroke:var(--parch);stroke-width:4px;opacity:.85}
+#hero{pointer-events:none}
+.sec{max-width:520px;margin:18px auto;padding:0 16px}
+.sec h2{font-size:28px;margin:0 0 6px}
+.fuel{list-style:none;margin:0;padding:0}
+.fuel li{background:var(--card);border:2px dashed var(--ink);border-radius:12px;padding:8px 12px;margin:8px 0}
+.fuel b{font-family:'Pirata One',serif;font-weight:400;font-size:20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:3px 11px}
+#panel{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 8px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.card{max-width:520px;margin:0 auto;background:var(--card);border:3px solid var(--ink);border-bottom:0;border-radius:22px 22px 0 0;padding:12px 16px 14px;box-shadow:0 -6px 18px rgba(0,0,0,.25)}
+.card .title{font-size:26px;line-height:1.05}
+.q{font-size:14px;opacity:.75}
+.cd{font-family:'Pirata One',serif;font-size:34px;color:var(--accent);line-height:1.1}
+.desc{margin:4px 0;font-size:16px}
+.eat{margin:4px 0 6px;font-size:16px}
+.gps{font-size:15px;opacity:.9;margin:2px 0 8px}
+button{font:inherit;font-size:18px;color:#fff;background:var(--accent);border:3px solid var(--ink);border-radius:14px;padding:6px 14px;cursor:pointer;box-shadow:0 4px 0 var(--ink);transition:transform .15s}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+button.alt{background:var(--card);color:var(--ink)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.pop{position:fixed;font-size:26px;pointer-events:none;z-index:50;animation:pp 1.8s ease-out forwards}
+@keyframes pp{to{transform:translate(var(--dx),-240px) rotate(300deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Parasnath Quest</h1>
+  <p class="sub">Jamshedpur to the summit and back home. Avengers, assemble!</p>
+  <div class="row">
+    <label>Trip day 1 <input type="date" id="date"></label>
+    <div class="xp"><div class="bar"><i id="xpb"></i></div><div class="lvl" id="lvl"></div></div>
+  </div>
+</header>
+
+<div class="mapwrap">
+<svg id="map" viewBox="0 0 400 880" role="img" aria-label="Adventure map of the Parasnath trip">
+  <defs><pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.2" fill="#fff" opacity=".25"/></pattern></defs>
+  <rect width="400" height="880" fill="var(--sea)"/>
+  <rect width="400" height="880" fill="url(#dots)"/>
+  <g class="wave" fill="none" stroke="var(--sea2)" stroke-width="3" stroke-linecap="round">
+    <path d="M6 150q10-8 20 0t20 0"/><path d="M350 60q10-8 20 0t20 0"/><path d="M5 520q10-8 20 0t20 0"/><path d="M356 600q10-8 20 0t20 0"/><path d="M10 860q10-8 20 0t20 0"/><path d="M340 840q10-8 20 0t20 0"/>
+  </g>
+  <path d="M60 30C180 8 340 20 372 90C398 200 368 300 384 420C396 560 380 700 350 800C300 872 150 872 70 822C20 700 42 560 26 430C10 300 36 160 30 80Z" fill="var(--land)" stroke="var(--ink)" stroke-width="4"/>
+  <path d="M60 30C180 8 340 20 372 90C398 200 368 300 384 420C396 560 380 700 350 800C300 872 150 872 70 822C20 700 42 560 26 430C10 300 36 160 30 80Z" fill="none" stroke="var(--parch)" stroke-width="2" stroke-dasharray="2 8" transform="translate(0 0) scale(.97) translate(6 12)"/>
+  <!-- mountains -->
+  <g stroke="var(--ink)" stroke-width="3" stroke-linejoin="round">
+    <polygon points="95,500 175,355 255,500" fill="#9a8a78"/>
+    <polygon points="175,355 150,397 168,388 178,405 192,388 205,397" fill="#fff" stroke-width="2"/>
+    <polygon points="215,500 290,395 360,500" fill="#8a7b6a"/>
+    <polygon points="290,395 270,425 285,418 296,432 312,418" fill="#fff" stroke-width="2"/>
+  </g>
+  <text x="200" y="345" text-anchor="middle" font-size="13" fill="var(--ink)" style="font-family:'Pirata One',serif">Sammed Shikhar</text>
+  <g font-size="22" text-anchor="middle">
+    <text x="60" y="190">🌴</text><text x="340" y="170">🌳</text><text x="42" y="330">🌳</text><text x="355" y="310">🌴</text><text x="50" y="640">🌲</text><text x="350" y="650">🌲</text><text x="60" y="760">🌴</text><text x="330" y="745">🌳</text><text x="200" y="860">🏠</text>
+  </g>
+  <g class="cloud" font-size="34" opacity=".9"><text x="0" y="45">☁️</text></g>
+  <g class="cloud" style="animation-delay:-18s;animation-duration:55s" font-size="28" opacity=".85"><text x="0" y="460">☁️</text></g>
+  <text class="bob" x="30" y="560" font-size="34">⛵</text>
+  <text class="bob" x="355" y="75" font-size="30" style="animation-delay:-2s">🐉</text>
+  <g class="spin"><text x="345" y="855" font-size="38" text-anchor="middle">🧭</text></g>
+  <text x="48" y="45" font-size="30" class="pulse">☀️</text>
+  <path id="route" fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="3 11" stroke-linecap="round"/>
+  <path id="routeDone" fill="none" stroke="var(--green)" stroke-width="5" stroke-linecap="round"/>
+  <g id="segs" visibility="hidden"></g>
+  <g id="nodes"></g>
+  <g id="hero"><g id="heroIn"><text class="bob" font-size="30" text-anchor="middle" y="-24">🧗</text></g></g>
+</svg>
+</div>
+
+<section class="sec"><h2>Fuel plan</h2><ul class="fuel" id="fuel"></ul></section>
+<section class="sec"><h2>Pack list</h2><div class="chips" id="pack"></div></section>
+
+<div id="panel"><div class="card">
+  <div class="q" id="q"></div>
+  <div class="title" id="ptitle"></div>
+  <div class="cd" id="cd"></div>
+  <div class="desc" id="pdesc"></div>
+  <div class="eat" id="peat"></div>
+  <div class="gps" id="gps">📡 Location off</div>
+  <div class="row"><button id="chk">Reached! ✔</button><button class="alt" id="loc">Track me 📍</button></div>
+</div></div>
+
+<script>
+var S=[
+{e:'🦸',t:'Avengers assemble',p:'Adityapur',d:0,h:17,m:0,lat:22.79,lng:86.16,x:90,s:'Squad meets at Adityapur. Hype level: maximum.',f:'Eat a proper early meal around 4:30 PM. Keep it light and not oily.'},
+{e:'🛺',t:'Auto to Tatanagar & shop',p:'Tatanagar Railway Station',d:0,h:17,m:30,lat:22.7753,lng:86.2025,x:260,s:'Auto to the station. Buy water, torches, glucose, snacks and dinner packs.',f:'Buy dinner to eat on the train, plus fruit and dry snacks for the climb.'},
+{e:'🚂',t:'Neelachal Express 12875',p:'Tatanagar Railway Station',d:0,h:19,m:30,lat:22.7753,lng:86.2025,x:110,s:'Train departs 7:30 PM. Arrival around 12:37 AM.',f:'Dinner on the train by 9 PM, then sleep. You will need it.'},
+{e:'📍',t:'Parasnath station',p:'Parasnath Railway Station',d:1,h:0,m:37,lat:23.966,lng:86.18,x:270,s:'Arrived at about 12:37 AM. Stretch, regroup, count heads.',f:'Hot chai at the station and a banana. Keep the heavy food for later.'},
+{e:'🚐',t:'Shared ride to Madhuban',p:'On the road',d:1,h:1,m:0,lat:23.964,lng:86.165,x:100,s:'Take a shared ride from about 1 AM. Reach Madhuban around 2 AM.',f:'Sip water. Nibble dates or chikki.'},
+{e:'⛺',t:'Madhuban base camp',p:'Madhuban',d:1,h:2,m:0,lat:23.9627,lng:86.1468,x:280,s:'Reach base around 2 AM. Torches on, bottles full, start the trek at 2:15 AM.',f:'Small snack now (banana plus dates). Eat again around 4:30 AM halfway up.'},
+{e:'🏔️',t:'Summit reached',p:'Sammed Shikhar',d:1,h:6,m:15,lat:23.9611,lng:86.1316,x:170,s:'Top by about 6:15 AM. Sunrise, temples, bragging rights.',f:'Breakfast at the top: parathas, sattu or fruit. Drink water often.'},
+{e:'⏳',t:'Summit window closes',p:'Sammed Shikhar',d:1,h:9,m:0,lat:23.9611,lng:86.1316,x:290,s:'Stay up top until 9 AM at most, then head down while it is still safe.',f:'Quick snack before you leave. Keep sipping water on the way down.'},
+{e:'🥾',t:'Back at Madhuban',p:'Madhuban',d:1,h:13,m:0,lat:23.9627,lng:86.1468,x:110,s:'Trek down by about 1 PM. Legs are jelly, spirits are high.',f:'Hot lunch at a Madhuban dhaba. Rice, dal and sabzi will do.'},
+{e:'🚐',t:'Ride to station',p:'Parasnath Railway Station',d:1,h:14,m:0,lat:23.966,lng:86.18,x:260,s:'Reach the station by 2:00 PM, 47 minutes before the train.',f:'Grab water and light snacks for the train.'},
+{e:'🚆',t:'Purushottam Express',p:'Parasnath Railway Station',d:1,h:14,m:47,lat:23.966,lng:86.18,x:120,s:'Departs 2:47 PM. Arrival around 7:55 PM.',f:'Have a light snack around 5:30 PM. Sleep is the best side quest.'},
+{e:'🏁',t:'Tatanagar station',p:'Tatanagar Railway Station',d:1,h:19,m:55,lat:22.7753,lng:86.2025,x:270,s:'Back at Tatanagar around 7:55 PM.',f:'Real dinner at home or on the way.'},
+{e:'🏠',t:'Home sweet home',p:'Jamshedpur',d:1,h:20,m:30,lat:22.79,lng:86.16,x:150,s:'Quest complete. Shower. Sleep. Legend.',f:'Warm khichdi and lots of water.'}
+];
+var Y0=62,DY=62,N=S.length,NS='http://www.w3.org/2000/svg',$=function(i){return document.getElementById(i)};
+S.forEach(function(s,i){s.y=Y0+i*DY});
+function mk(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function sg(i){var a=S[i],b=S[i+1],my=(a.y+b.y)/2;return 'M'+a.x+' '+a.y+'C'+a.x+' '+my+' '+b.x+' '+my+' '+b.x+' '+b.y}
+var full='';S.forEach(function(s,i){if(i<N-1)full+=(i?'':'')+(i?sg(i).replace(/^M[^C]+/,''):sg(i))});
+$('route').setAttribute('d',full);
+var segs=[];for(var i=0;i<N-1;i++){segs.push(mk('path',{d:sg(i)},$('segs')))}
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+var done=parseInt(store('pq_done'))||0,sel=Math.min(done,N-1),pos=Math.max(done-1,0),busy=false;
+var dt=$('date');var td=new Date();td.setDate(td.getDate()+1);
+function iso(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+dt.value=store('pq_date')||iso(td);
+dt.onchange=function(){store('pq_date',dt.value);render()};
+function when(s){var p=dt.value.split('-');return new Date(+p[0],+p[1]-1,+p[2]+s.d,s.h,s.m)}
+function ft(s){var w=when(s);return w.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' · '+w.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}
+var nodes=[];
+S.forEach(function(s,i){
+ var g=mk('g',{class:'node lock',tabindex:0,role:'button','aria-label':s.t},$('nodes'));
+ g.setAttribute('transform','translate('+s.x+' '+s.y+')');
+ mk('circle',{class:'ring',r:25,fill:'none',stroke:'var(--accent)','stroke-width':3,opacity:0},g);
+ mk('circle',{class:'b',r:19},g);
+ mk('text',{class:'e'},g).textContent=s.e;
+ var left=s.x>200,tx=left?-28:28,an=left?'end':'start';
+ var l=mk('text',{class:'l',x:tx,y:-3,'text-anchor':an},g);l.textContent=s.t;
+ var t=mk('text',{class:'t',x:tx,y:12,'text-anchor':an},g);t.textContent=(s.h%12||12)+':'+('0'+s.m).slice(-2)+(s.h<12?' AM':' PM');
+ g.onclick=function(){sel=i;render()};
+ g.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();sel=i;render()}};
+ nodes.push(g)});
+function place(i){$('hero').setAttribute('transform','translate('+S[i].x+' '+S[i].y+')')}
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function move(from,to,cb){
+ if(from===to){cb&&cb();return}busy=true;
+ var step=to>from?1:-1,a=from,b=from+step,seg=segs[Math.min(a,b)],L=seg.getTotalLength(),t0=null,dur=2600;
+ function f(ts){if(!t0)t0=ts;var k=Math.min((ts-t0)/dur,1),d=ease(k)*L,p=seg.getPointAtLength(step>0?d:L-d);
+  $('hero').setAttribute('transform','translate('+p.x+' '+p.y+')');
+  if(k<1)requestAnimationFrame(f);else{pos=b;move(b,to,cb)}}
+ requestAnimationFrame(f);
+ if(from===to)busy=false}
+function confetti(){var em=['⭐','🎉','✨','🔥','🏔️'];for(var i=0;i<14;i++){var p=document.createElement('div');p.className='pop';p.textContent=em[i%5];p.style.left=(30+Math.random()*40)+'vw';p.style.top='62vh';p.style.setProperty('--dx',(Math.random()*160-80)+'px');p.style.animationDelay=(Math.random()*.4)+'s';document.body.appendChild(p);setTimeout(function(x){x.remove()}.bind(null,p),2400)}}
+var ranks=['Rookie scout','Trail hunter','Night walker','Peak warrior','Summit legend','Parasnath legend'];
+function fmtCd(ms){var a=Math.abs(ms),s=Math.floor(a/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),c=s%60;return (d?d+'d ':'')+(h||d?h+'h ':'')+m+'m '+('0'+c).slice(-2)+'s'}
+function render(){
+ nodes.forEach(function(g,i){g.setAttribute('class','node '+(i<done?'done':i===done?'':'lock')+(i===sel?' sel':''));var r=g.querySelector('.ring');r.setAttribute('opacity',i===done?1:0);r.setAttribute('class','ring'+(i===done?' pulse':''))});
+ var dd='';for(var i=0;i<Math.min(done,N-1);i++)dd+=(i?sg(i).replace(/^M[^C]+/,''):sg(i));
+ $('routeDone').setAttribute('d',dd);
+ $('xpb').style.width=(done/N*100)+'%';
+ $('lvl').textContent='Level '+(Math.floor(done/3)+1)+': '+ranks[Math.min(Math.floor(done/3),5)]+' · '+done*100+' XP';
+ var s=S[sel];
+ $('q').textContent='Stop '+(sel+1)+' of '+N+(sel===done?' · your next quest':sel<done?' · cleared':' · locked');
+ $('ptitle').textContent=s.e+' '+s.t;
+ $('pdesc').textContent=s.s+' ('+ft(s)+')';
+ $('peat').textContent='🍴 '+s.f;
+ var c=$('chk');c.disabled=!(sel===done&&done<N&&!busy);
+ c.textContent=done>=N?'Quest complete! 🏆':(sel===done?'Reached! ✔ +100 XP':sel<done?'Cleared ✔':'Locked 🔒');
+ tick()}
+function tick(){var s=S[sel],ms=when(s)-Date.now();
+ $('cd').textContent=done>=N?'Mission accomplished 🏆':(ms>0?'⏱ '+fmtCd(ms):(sel<done?'Done':'⏰ Due now, +'+fmtCd(ms)))}
+setInterval(tick,1000);
+$('chk').onclick=function(){if(sel!==done||done>=N||busy)return;var from=pos,to=done;done++;store('pq_done',done);confetti();
+ render();move(from,to,function(){busy=false;sel=Math.min(done,N-1);render()})};
+/* GPS */
+var watch=null;
+function hav(a,b,c,d){var R=6371,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)*Math.sin(y/2);return 2*R*Math.asin(Math.sqrt(h))}
+$('loc').onclick=function(){
+ if(!navigator.geolocation){$('gps').textContent='📡 This browser has no location support.';return}
+ if(watch!==null){navigator.geolocation.clearWatch(watch);watch=null;$('gps').textContent='📡 Location off';$('loc').textContent='Track me 📍';return}
+ $('gps').textContent='📡 Finding you…';$('loc').textContent='Stop tracking';
+ try{watch=navigator.geolocation.watchPosition(function(p){
+  var t=S[Math.min(done,N-1)],k=hav(p.coords.latitude,p.coords.longitude,t.lat,t.lng);
+  $('gps').textContent='📡 '+(k<.3?'You are at '+t.p+'! Tap Reached.':k.toFixed(1)+' km to '+t.p+' (approx)')+' · ±'+Math.round(p.coords.accuracy)+' m';
+ },function(e){watch=null;$('loc').textContent='Track me 📍';$('gps').textContent='📡 Location blocked. Allow it in browser settings, or open this page in your browser tab.'},{enableHighAccuracy:true,maximumAge:5000})}catch(e){$('gps').textContent='📡 Location unavailable here.'}};
+/* fuel + pack */
+var fu=$('fuel');S.forEach(function(s,i){if(i===1||i===2||i===3||i===5||i===6||i===8||i===10){var li=document.createElement('li');li.innerHTML='<b></b><div></div>';li.firstChild.textContent=s.e+' '+(s.h%12||12)+':'+('0'+s.m).slice(-2)+(s.h<12?' AM':' PM')+' at '+s.t;li.lastChild.textContent=s.f;fu.appendChild(li)}});
+['💧 3L water each','🔦 Torch + spare cells','🔋 Power bank','🍬 Glucose / ORS','🥜 Dry fruits & chikki','🍌 Bananas','🧥 Light jacket','🌧️ Poncho','🥾 Grippy shoes','🦯 Trek stick','🪪 ID card','🩹 First aid'].forEach(function(t){var s=document.createElement('span');s.textContent=t;$('pack').appendChild(s)});
+place(pos);render();
+</script>
+</body>
+</html>
