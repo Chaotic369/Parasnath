@@ -22,8 +22,8 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--card);border:2px
 .bar{height:14px;border:2px solid var(--ink);border-radius:9px;background:var(--card);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width 1.4s ease}
 .lvl{font-size:15px;margin-top:2px}
-.mapwrap{max-width:520px;margin:6px auto;padding:0 8px}
-svg{width:100%;height:auto;display:block;border:3px solid var(--ink);border-radius:18px;background:var(--sea)}
+.mapwrap{max-width:520px;margin:6px auto;padding:22px 8px 0;perspective:1200px}
+svg{width:100%;height:auto;display:block;border:3px solid var(--ink);border-radius:18px;background:var(--sea);transform:rotateX(12deg) scale(.97);transform-origin:50% 90%;box-shadow:0 34px 30px -14px rgba(0,0,0,.5),0 0 0 6px var(--parch)}
 .wave{animation:wv 7s ease-in-out infinite alternate}
 @keyframes wv{to{transform:translateX(18px)}}
 .cloud{animation:cl 40s linear infinite}
@@ -34,7 +34,7 @@ svg{width:100%;height:auto;display:block;border:3px solid var(--ink);border-radi
 @keyframes sp{to{transform:rotate(360deg)}}
 .pulse{animation:pu 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes pu{50%{transform:scale(1.35);opacity:.55}}
-.node{cursor:pointer}
+.node{cursor:pointer;filter:drop-shadow(0 4px 3px rgba(0,0,0,.4))}
 .node circle.b{fill:var(--card);stroke:var(--ink);stroke-width:3;transition:fill .8s}
 .node.done circle.b{fill:var(--green)}
 .node.lock circle.b{fill:var(--lock)}
@@ -80,36 +80,69 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-o
 
 <div class="mapwrap">
 <svg id="map" viewBox="0 0 400 880" role="img" aria-label="Adventure map of the Parasnath trip">
-  <defs><pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.2" fill="#fff" opacity=".25"/></pattern></defs>
-  <rect width="400" height="880" fill="var(--sea)"/>
+  <defs>
+      <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.2" fill="#fff" opacity=".25"/></pattern>
+      <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sea2)"/><stop offset="1" stop-color="var(--sea)"/></linearGradient>
+      <linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
+      <linearGradient id="mL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8c8b0"/><stop offset="1" stop-color="#8f7e69"/></linearGradient>
+      <linearGradient id="mR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b6c5b"/><stop offset="1" stop-color="#44392e"/></linearGradient>
+      <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient>
+      <filter id="blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+      <path id="isl" d="M60 30C180 8 340 20 372 90C398 200 368 300 384 420C396 560 380 700 350 800C300 872 150 872 70 822C20 700 42 560 26 430C10 300 36 160 30 80Z"/>
+      <g id="pine"><ellipse cx="2" cy="3" rx="10" ry="3.5" fill="#000" opacity=".28"/><rect x="-1.5" y="-4" width="3" height="7" fill="#6b4a2b"/><polygon points="0,-28 -11,-4 11,-4" fill="#3a7336"/><polygon points="0,-28 11,-4 0,-4" fill="#2b5a2c"/><polygon points="0,-40 -8,-18 8,-18" fill="#4d8f43"/><polygon points="0,-40 8,-18 0,-18" fill="#3a7336"/></g>
+      <g id="palm"><ellipse cx="3" cy="3" rx="10" ry="3.5" fill="#000" opacity=".28"/><path d="M0 3Q5 -12 1 -26" stroke="#8a6238" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M1 -26q-14 -4 -18 6M1 -26q14 -4 18 6M1 -26q-6 -12 -16 -8M1 -26q8 -12 16 -8" stroke="#3d8a3a" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+    </defs>
+  <rect width="400" height="880" fill="url(#seaG)"/>
   <rect width="400" height="880" fill="url(#dots)"/>
   <g class="wave" fill="none" stroke="var(--sea2)" stroke-width="3" stroke-linecap="round">
     <path d="M6 150q10-8 20 0t20 0"/><path d="M350 60q10-8 20 0t20 0"/><path d="M5 520q10-8 20 0t20 0"/><path d="M356 600q10-8 20 0t20 0"/><path d="M10 860q10-8 20 0t20 0"/><path d="M340 840q10-8 20 0t20 0"/>
   </g>
-  <path d="M60 30C180 8 340 20 372 90C398 200 368 300 384 420C396 560 380 700 350 800C300 872 150 872 70 822C20 700 42 560 26 430C10 300 36 160 30 80Z" fill="var(--land)" stroke="var(--ink)" stroke-width="4"/>
+  <use href="#isl" fill="#000" opacity=".3" transform="translate(8 30)" filter="url(#blur)"/>
+    <use href="#isl" fill="#5a3b19" stroke="var(--ink)" stroke-width="4" transform="translate(0 18)"/>
+    <use href="#isl" fill="#8b6330" stroke="var(--ink)" stroke-width="3" transform="translate(0 9)"/>
+    <use href="#isl" fill="var(--land)" stroke="var(--ink)" stroke-width="4"/>
+    <use href="#isl" fill="url(#shade)"/>
   <path d="M60 30C180 8 340 20 372 90C398 200 368 300 384 420C396 560 380 700 350 800C300 872 150 872 70 822C20 700 42 560 26 430C10 300 36 160 30 80Z" fill="none" stroke="var(--parch)" stroke-width="2" stroke-dasharray="2 8" transform="translate(0 0) scale(.97) translate(6 12)"/>
   <!-- mountains -->
-  <g stroke="var(--ink)" stroke-width="3" stroke-linejoin="round">
-    <polygon points="95,500 175,355 255,500" fill="#9a8a78"/>
-    <polygon points="175,355 150,397 168,388 178,405 192,388 205,397" fill="#fff" stroke-width="2"/>
-    <polygon points="215,500 290,395 360,500" fill="#8a7b6a"/>
-    <polygon points="290,395 270,425 285,418 296,432 312,418" fill="#fff" stroke-width="2"/>
-  </g>
+  <path d="M300 505Q320 530 336 556" fill="none" stroke="#5fb5c4" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="335" cy="568" rx="31" ry="12" fill="#5fb5c4" stroke="var(--ink)" stroke-width="2"/>
+    <ellipse cx="327" cy="565" rx="14" ry="3.5" fill="#fff" opacity=".4"/>
+    <path d="M20 508Q90 470 150 508Z" fill="var(--green)" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M250 508Q320 475 380 508Z" fill="var(--green)" stroke="var(--ink)" stroke-width="2"/>
+    <ellipse cx="175" cy="504" rx="98" ry="10" fill="#000" opacity=".28"/>
+    <ellipse cx="290" cy="504" rx="76" ry="9" fill="#000" opacity=".28"/>
+    <g stroke-linejoin="round">
+      <polygon points="95,500 175,355 190,500" fill="url(#mL)"/>
+      <polygon points="175,355 255,500 190,500" fill="url(#mR)"/>
+      <polygon points="175,355 151,398 163,391 170,407 177,392" fill="#fff"/>
+      <polygon points="175,355 199,398 189,391 182,407 177,392" fill="#cdd9e6"/>
+      <polygon points="95,500 175,355 255,500" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+      <polygon points="215,500 290,395 300,500" fill="url(#mL)"/>
+      <polygon points="290,395 360,500 300,500" fill="url(#mR)"/>
+      <polygon points="290,395 269,425 280,419 287,432 292,420" fill="#fff"/>
+      <polygon points="290,395 311,425 301,418 295,433 292,420" fill="#cdd9e6"/>
+      <polygon points="215,500 290,395 360,500" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+    </g>
+    <path d="M120 470l14 12M150 440l10 14M270 450l-8 12M320 470l-10 14" stroke="#3b2616" stroke-width="1.5" opacity=".35" stroke-linecap="round"/>
   <text x="200" y="345" text-anchor="middle" font-size="13" fill="var(--ink)" style="font-family:'Pirata One',serif">Sammed Shikhar</text>
-  <g font-size="22" text-anchor="middle">
-    <text x="60" y="190">🌴</text><text x="340" y="170">🌳</text><text x="42" y="330">🌳</text><text x="355" y="310">🌴</text><text x="50" y="640">🌲</text><text x="350" y="650">🌲</text><text x="60" y="760">🌴</text><text x="330" y="745">🌳</text><text x="200" y="860">🏠</text>
-  </g>
+  <use href="#palm" x="60" y="190"/><use href="#pine" x="340" y="170"/><use href="#pine" x="42" y="330"/><use href="#palm" x="355" y="310"/>
+    <use href="#pine" x="70" y="528"/><use href="#pine" x="90" y="538"/><use href="#pine" x="350" y="525"/>
+    <use href="#pine" x="50" y="640"/><use href="#pine" x="350" y="650"/><use href="#palm" x="60" y="760"/><use href="#pine" x="330" y="745"/>
+    <text x="200" y="860" font-size="22" text-anchor="middle">🏠</text>
   <g class="cloud" font-size="34" opacity=".9"><text x="0" y="45">☁️</text></g>
   <g class="cloud" style="animation-delay:-18s;animation-duration:55s" font-size="28" opacity=".85"><text x="0" y="460">☁️</text></g>
   <text class="bob" x="30" y="560" font-size="34">⛵</text>
   <text class="bob" x="355" y="75" font-size="30" style="animation-delay:-2s">🐉</text>
   <g class="spin"><text x="345" y="855" font-size="38" text-anchor="middle">🧭</text></g>
   <text x="48" y="45" font-size="30" class="pulse">☀️</text>
-  <path id="route" fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="3 11" stroke-linecap="round"/>
+  <path id="roadEdge" fill="none" stroke="#7a5428" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+    <path id="roadBase" fill="none" stroke="#d9b574" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="route" fill="none" stroke="#fff1c1" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>
   <path id="routeDone" fill="none" stroke="var(--green)" stroke-width="5" stroke-linecap="round"/>
   <g id="segs" visibility="hidden"></g>
   <g id="nodes"></g>
-  <g id="hero"><g id="heroIn"><text class="bob" font-size="30" text-anchor="middle" y="-24">🧗</text></g></g>
+  <g id="hero"><g id="heroIn"><ellipse cx="0" cy="4" rx="14" ry="5" fill="#000" opacity=".4"/><text class="bob" font-size="34" text-anchor="middle" y="-24">🧗</text></g></g>
+    <rect width="400" height="880" fill="url(#vig)" pointer-events="none"/>
 </svg>
 </div>
 
@@ -147,7 +180,7 @@ S.forEach(function(s,i){s.y=Y0+i*DY});
 function mk(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
 function sg(i){var a=S[i],b=S[i+1],my=(a.y+b.y)/2;return 'M'+a.x+' '+a.y+'C'+a.x+' '+my+' '+b.x+' '+my+' '+b.x+' '+b.y}
 var full='';S.forEach(function(s,i){if(i<N-1)full+=(i?'':'')+(i?sg(i).replace(/^M[^C]+/,''):sg(i))});
-$('route').setAttribute('d',full);
+['roadEdge','roadBase','route'].forEach(function(id){$(id).setAttribute('d',full)});
 var segs=[];for(var i=0;i<N-1;i++){segs.push(mk('path',{d:sg(i)},$('segs')))}
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 var done=parseInt(store('pq_done'))||0,sel=Math.min(done,N-1),pos=Math.max(done-1,0),busy=false;
@@ -163,6 +196,7 @@ S.forEach(function(s,i){
  g.setAttribute('transform','translate('+s.x+' '+s.y+')');
  mk('circle',{class:'ring',r:25,fill:'none',stroke:'var(--accent)','stroke-width':3,opacity:0},g);
  mk('circle',{class:'b',r:19},g);
+  mk('circle',{cx:-6,cy:-7,r:6,fill:'#fff',opacity:.3,'pointer-events':'none'},g);
  mk('text',{class:'e'},g).textContent=s.e;
  var left=s.x>200,tx=left?-28:28,an=left?'end':'start';
  var l=mk('text',{class:'l',x:tx,y:-3,'text-anchor':an},g);l.textContent=s.t;
